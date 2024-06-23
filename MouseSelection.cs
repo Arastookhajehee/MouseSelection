@@ -11,13 +11,14 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using BonsaiInstallation;
+using MouseSelection.Mouse;
 
 namespace MouseSelection
 {
     public class MouseSelection : GH_Component
     {
         int counter = 0;
-        MouseInteraction mouse;
+        public DoubleClick mouse;
 
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -40,6 +41,8 @@ namespace MouseSelection
         {
             pManager.AddBooleanParameter("Run", "Run", "Run", GH_ParamAccess.item);
             pManager.AddGenericParameter("branches", "branches", "branches", GH_ParamAccess.list);
+            pManager.AddBooleanParameter("reset", "reset", "reset", GH_ParamAccess.item);
+            pManager.AddBooleanParameter("modifyMode","modifyMode","modifyMode",GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -60,8 +63,20 @@ namespace MouseSelection
         {
             bool run = false;
             List<TimberBranch> branches = new List<TimberBranch>();
+            bool reset = false;
+            bool modifyMode = false;
+
             DA.GetData(0, ref run);
             DA.GetDataList(1, branches);
+            DA.GetData(2, ref reset);
+            DA.GetData(3, ref modifyMode);
+
+            if (reset)
+            {
+                if (mouse == null) return;
+                mouse.selectionList = new List<TimberBranch>();
+                return;
+            }
 
             if (!run) 
             {
@@ -71,13 +86,22 @@ namespace MouseSelection
             }
             if (counter == 0) 
             {
-                mouse = new MouseInteraction(this.OnPingDocument(),this, branches);
+                mouse = new DoubleClick(this.OnPingDocument(),this, branches);
                 mouse.EnableInteraction();
             }
 
+            //Guid firstSelID = mouse.selectionList. mouse.branches.Where(b => b.ID == mouse.selectionList[0].ID).Select(b => b.ID).FirstOrDefault();
+            //Guid secondSelID = mouse.branches.Where(b => b.ID == mouse.selectionList[1].ID).Select(b => b.ID).FirstOrDefault();
+
             mouse.branches = branches;
-            DA.SetData(0, mouse.selectedBranch);
-            DA.SetData(1, mouse.secondarayBranch);
+
+            if (modifyMode) if (mouse.selectionList.Count > 1) mouse.selectionList.RemoveAt(0);
+
+            var firstSelection = mouse.selectionList.Count > 0 ? mouse.selectionList[0] : null;
+            var secondSelection = mouse.selectionList.Count > 1 ? mouse.selectionList[1] : null;
+
+            DA.SetData(0, firstSelection);
+            DA.SetData(1, secondSelection);
 
 
             counter = counter > 100 ? 5 : counter + 1;
@@ -98,199 +122,5 @@ namespace MouseSelection
         /// </summary>
         public override Guid ComponentGuid => new Guid("28aeeaa0-b4b4-4e5e-8219-011adc8fa55e");
     }
-
-    public class MouseInteraction : Rhino.UI.MouseCallback
-    {
-        public GH_Component gh_comp  { get; set; }
-        public GH_Document gh_doc { get; set; }
-        public List<TimberBranch> branches { get; set; }
-
-        public TimberBranch selectedBranch { get; set; }
-        public TimberBranch secondarayBranch { get; set; }
-
-        public Point3d downPnt { get; set; }
-        public Point3d upPnt { get; set; }
-        public double dragDistance { get; set; }
-        public double dragAngle { get; set; }
-
-        //public System.Timers.Timer timer { get; set; }
-
-
-        public MouseInteraction(GH_Document gh_doc, GH_Component gh_comp, List<TimberBranch> branches)
-        {
-            this.gh_doc = gh_doc;
-            this.gh_comp = gh_comp;
-            this.branches = branches;
-            this.selectedBranch = null;
-            this.secondarayBranch = null;
-        }
-
-        public void EnableInteraction()
-        {
-            this.Enabled = true;
-            //this.timer = new System.Timers.Timer(100);
-            //this.timer.Elapsed += Timer_Elapsed;
-            //this.timer.AutoReset = true;
-            //this.timer.Start();
-        }
-
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            this.gh_doc.ScheduleSolution(1, doc => 
-            {
-                this.gh_comp.ExpireSolution(false);
-            });
-        }
-
-        public void DisableInteractions()
-        {
-            this.Enabled = false;
-            //this.timer.Stop();
-            //this.timer.Elapsed -= Timer_Elapsed;
-            //this.timer.AutoReset = false;
-            //this.timer.Dispose();
-        }
-
-        protected override void OnMouseDown(MouseCallbackEventArgs e)
-        {
-
-            if (e.Button != System.Windows.Forms.MouseButtons.Left) return;
-            if (this.selectedBranch == null) return;
-
-            bool controlKeyDown = e.CtrlKeyDown;
-
-            if (!controlKeyDown) this.downPnt = GetCPlaneSelectionPoint(e, this.selectedBranch.buildOnPlane);
-        }
-
-        private static Point3d GetCPlaneSelectionPoint(MouseCallbackEventArgs e, Plane cPlane)
-        {
-            // get the intersection of the view's cplane with the view's frustum line
-            var rhinoDoc = Rhino.RhinoDoc.ActiveDoc;
-            var view = rhinoDoc.Views.ActiveView;
-
-            view.ActiveViewport.GetFrustumLine(e.ViewportPoint.X, e.ViewportPoint.Y, out Line line);
-
-            Intersection.LinePlane(line, cPlane, out double param);
-
-            return line.PointAt(param);
-        }
-
-        // mouse up
-        protected override void OnMouseUp(MouseCallbackEventArgs e)
-        {
-            if (e.Button != System.Windows.Forms.MouseButtons.Left) return;
-            if (this.selectedBranch == null) return;
-            if (e.CtrlKeyDown) return;
-
-            Plane cPlane = this.selectedBranch.buildOnPlane;
-
-            this.upPnt = GetCPlaneSelectionPoint(e, cPlane);
-
-            // calculate the distance and angle between the two points
-            this.dragDistance = this.downPnt.DistanceTo(this.upPnt);
-            this.dragAngle = Vector3d.VectorAngle(this.upPnt - cPlane.Origin, this.downPnt - cPlane.Origin, cPlane);
-
-            if (dragDistance < 1) return;
-            // if the down point is close to the plane origin, translate the plane ins the direction of the drag
-            double dragThreshold = 20;
-
-            double distanceToPlane = this.downPnt.DistanceTo(cPlane.Origin);
-
-            if (distanceToPlane < dragThreshold)
-            {
-                Plane tempPlane = new Plane(cPlane);
-
-                tempPlane.Translate(this.upPnt - this.downPnt);
-
-                this.selectedBranch.buildOnPlane = tempPlane;
-            }
-            else
-            {
-                // if the down point is far from the plane origin, rotate the plane around the plane origin
-                Plane tempPlane = new Plane(cPlane);
-                tempPlane.Rotate(-this.dragAngle, tempPlane.ZAxis, tempPlane.Origin);
-                this.selectedBranch.buildOnPlane = tempPlane;   
-            }
-
-            this.gh_doc.ScheduleSolution(1, doc =>
-            {
-                this.gh_comp.ExpireSolution(false);
-            });
-
-        }
-
-        // double click
-        protected override void OnMouseDoubleClick(MouseCallbackEventArgs e)
-        {
-            
-            // get the frustum line
-            var rhinoDoc = Rhino.RhinoDoc.ActiveDoc;
-            var view = rhinoDoc.Views.ActiveView;
-
-            bool controlDown = e.CtrlKeyDown;
-
-            view.ActiveViewport.GetFrustumLine(e.ViewportPoint.X, e.ViewportPoint.Y, out Line line);
-
-            TimberBranch nearestBranch = null;
-            Plane nearestPlane = Plane.Unset;
-            double minDistance = double.MaxValue;
-            foreach (var branch in this.branches)
-            {
-                Mesh meshItem = branch.meshBox;
-                Point3d[] points = Intersection.MeshLine(meshItem, line, out int[] faceIndices);
-                if (points != null && points.Length > 0)
-                {
-                    for (int i = 0; i < points.Length; i++)
-                    {
-                        Point3d pnt = points[i];
-                        int faceIndex = faceIndices[i];
-
-                        double distance = pnt.DistanceTo(line.To);
-                        if (distance < minDistance)
-                        {
-                            minDistance = distance;
-
-
-                            // get the plane from the orientation planes that has the largest z local value for the point
-                            Plane pl = branch.orientablePlanes.OrderBy(p => TimberBranch.PlanePointZValue(p,pnt)).Last();
-                            nearestPlane = new Plane(pl);
-                            nearestPlane.Origin = pnt + nearestPlane.ZAxis * branch.thickness /2.0;
-                            branch.buildOnPlane = nearestPlane;
-                            nearestBranch = branch;
-
-                        }
-
-                    }
-                }
-            }
-
-            if (nearestBranch == null) return;
-            if (controlDown)
-            {
-                if (this.secondarayBranch == null)
-                {
-                    this.secondarayBranch = nearestBranch;
-                }
-                else if (this.secondarayBranch.ID == nearestBranch.ID)
-                {
-                    this.secondarayBranch = null;
-                }
-                else
-                {
-                    this.secondarayBranch = nearestBranch;
-                }
-            }
-
-            else this.selectedBranch = nearestBranch;
-
-            if (!controlDown) this.downPnt = GetCPlaneSelectionPoint(e, nearestBranch.buildOnPlane);
-
-            this.gh_doc.ScheduleSolution(1, doc =>
-            {
-                this.gh_comp.ExpireSolution(false);
-            });
-
-        }
-    }
-
+   
 }
