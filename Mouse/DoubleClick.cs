@@ -104,10 +104,18 @@ namespace MouseSelection.Mouse
             while (this.selectionList.Count > 2)
             {
                 this.selectionList.RemoveAt(0);
-            }   
+            }
 
-            this.gh_doc.ScheduleSolution(1, doc =>
+            // get the open GH document
+            GH_Document activeDocument = Grasshopper.Instances.ActiveCanvas.Document;
+
+            activeDocument.ScheduleSolution(1, doc =>
             {
+
+                //GH_Document componentDoc = this.gh_comp.OnPingDocument();
+
+                if (!doc.Objects.Any(o => o is MouseSelection)) return;
+
                 this.gh_comp.ExpireSolution(false);
             });
 

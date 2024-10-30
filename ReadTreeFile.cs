@@ -65,7 +65,7 @@ namespace MouseSelection
             {
                 Plane ogPlane = plane != Plane.Unset ? plane : Plane.WorldXY;
                 ogPlane.Translate(ogPlane.ZAxis * (-9 - resetZShift));
-                List<TimberBranch> resetList = new List<TimberBranch> { new TimberBranch(ogPlane, "BASE", Color.Tan, "VIRTUALBASE") };
+                List<TimberBranch> resetList = new List<TimberBranch> { new TimberBranch(ogPlane, "BASE", Color.Tan, "physical") };
                 DA.SetDataList(0, resetList);
                 DA.SetData(1, TimberBranch.ListToJson(resetList));
                 return;

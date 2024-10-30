@@ -99,14 +99,14 @@ namespace MouseSelection
             {
                 if (selection == null) return;
 
-                TimberBranch branch = new TimberBranch(mouse.mousePlane, user, color, "new");
+                TimberBranch branch = new TimberBranch(mouse.mousePlane, user, color, "virtual");
                 DA.SetData(0, branch.brep);
                 DA.SetData(1, new Circle(mouse.mousePlane, 20));
                 DA.SetData(3, branch);
                 return;
             }
 
-            var newOne = selection.BuildOn(mouse.mousePlane, user, color, "virtual");
+            var newOne = selection.BuildOn(mouse.mousePlane, user, color,false);
             list.Add(newOne);
 
             DA.SetData(2, TimberBranch.ListToJson(list));

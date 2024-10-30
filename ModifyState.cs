@@ -31,6 +31,14 @@ namespace MouseSelection
             pManager.AddGenericParameter("selection", "selection", "selection", GH_ParamAccess.item);
             pManager.AddTextParameter("state", "state", "state", GH_ParamAccess.item); 
             pManager.AddBooleanParameter("modify", "mod", "modify", GH_ParamAccess.item);
+            pManager.AddNumberParameter("appShiftX", "appShiftX", "appShiftX", GH_ParamAccess.item);
+            pManager.AddNumberParameter("appShiftY", "appShiftY", "appShiftY", GH_ParamAccess.item);
+            pManager.AddNumberParameter("appShiftZ", "appShiftZ", "appShiftZ", GH_ParamAccess.item);
+            pManager.AddNumberParameter("glueShiftX", "glueShiftX", "glueShiftX", GH_ParamAccess.item);
+            pManager.AddNumberParameter("glueShiftY", "glueShiftY", "glueShiftY", GH_ParamAccess.item);
+            pManager.AddNumberParameter("glueShiftZ", "glueShiftZ", "glueShiftZ", GH_ParamAccess.item);
+            pManager.AddNumberParameter("pickShift", "pickShift", "pickShift", GH_ParamAccess.item);
+            pManager.AddNumberParameter("orientation", "orientation", "orientation", GH_ParamAccess.item);  
         }
 
         /// <summary>
@@ -48,30 +56,84 @@ namespace MouseSelection
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             List<TimberBranch> list = new List<TimberBranch>();
+            List<TimberBranch> newList = new List<TimberBranch>();
             TimberBranch selection = null;
             string state = "";
             bool modify = false;
+
+            double appShiftX = 0.0;
+            double appShiftY = 0.0;
+            double appShiftZ = 0.0;
+            double glueX = 0.0;
+            double glueY = 0.0;
+            double glueZ = 0.0;
+            double pickShift = 0.0;
+            double orientation = 0;
+
 
             DA.GetDataList(0, list);
             DA.GetData(1, ref selection);
             DA.GetData(2, ref state);
             DA.GetData(3, ref modify);
+            DA.GetData(4, ref appShiftX);
+            DA.GetData(5, ref appShiftY);
+            DA.GetData(6, ref appShiftZ);
+            DA.GetData(7, ref glueX);
+            DA.GetData(8, ref glueY);
+            DA.GetData(9, ref glueZ);
+            DA.GetData(10, ref pickShift);
+            DA.GetData(11, ref orientation);
 
             if (!modify) return;
 
             if (selection == null) return;
 
-            // get the branch
-            int index = list.FindIndex(b => b.ID == selection.ID);
-            TimberBranch branch = list[index];
-            if (branch == null) return;
+            for (int i = list.Count - 1; i > -1; i--)
+            {
+                TimberBranch branch = list[i];
+                if (branch.ID == selection.ID)
+                {
+                    string modified = branch.modificationTimeStamp;
+                    TimberBranch duplicate = new TimberBranch(branch, branch.placementPlane);
+                    duplicate.modificationTimeStamp = modified;
 
-            branch.state = state;
+                    if (state.Equals("physical"))
+                    {
+                        string built = TimberBranch.GetTimeStamp();
+                        duplicate.physicalTimeStamp = built;
+                    }
+                    if (state.Equals("fabricated")) 
+                    {
+                        string fabricated = TimberBranch.GetTimeStamp();
+                        duplicate.fabricatedTimeStamp = fabricated;
+                    }
+                    if (state.Equals("fabricationFail"))
+                    {
+                        string fail = TimberBranch.GetTimeStamp();
+                        duplicate.fabricationFail = fail;
+                    }
 
-            list.RemoveAt(index);
-            list.Insert(index, branch);
+                    duplicate.state = state;
 
-            DA.SetData(0, TimberBranch.ListToJson(list));
+
+                    double[] shiftValues = { appShiftX, appShiftY, appShiftZ, pickShift, orientation};
+                    double[] glueValues = { glueX, glueY, glueZ };
+                    // turn the values into a csv stirng
+                    duplicate.placementShift = shiftValues.Length == 0 ? "" : string.Join(",", shiftValues);
+                    duplicate.placementGlueShift = glueValues.Length == 0 ? "" : string.Join(",", glueValues);
+
+
+                    newList.Add(duplicate);
+                }
+                else
+                {
+                    newList.Add(branch);
+                }
+                
+            }
+
+
+            DA.SetData(0, TimberBranch.ListToJson(newList));
         }
 
         /// <summary>

@@ -69,14 +69,14 @@ namespace MouseSelection
             if (!DA.GetData(6, ref color)) return;
             if (!DA.GetData(7, ref ADD)) return;
 
-            
 
 
-            var branch1 = selection1.BuildOn(plane1, user, color, "virtual");
-            var branch2 = selection2.BuildOn(plane2, user, color, "virtual");
 
-            branches.Add(branch1);
-            branches.Add(branch2);
+            var branch1 = new TimberBranch(plane1, "default", System.Drawing.Color.MediumAquamarine, "virtual");
+            var branch2 = new TimberBranch(plane1, "default", System.Drawing.Color.MediumAquamarine, "virtual");
+
+            //branches.Add(branch1);
+            //branches.Add(branch2);
 
             Brep[] previewBreps = { branch1.brep, branch2.brep };
             TimberBranch[] previewTBrances = { branch1, branch2 };
@@ -87,7 +87,15 @@ namespace MouseSelection
                 DA.SetDataList(2, previewTBrances);
                 return; 
             }
-            
+
+            branch1 = null;
+            branch2 = null;
+
+            branch1 = selection1.BuildOn(plane1, user, color, false);
+            branches.Add(branch1);
+            branch2 = selection2.BuildOn(plane2, user, color, false);
+            branches.Add(branch2);
+
             DA.SetData(1, TimberBranch.ListToJson(branches));
 
         }

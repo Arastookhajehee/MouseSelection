@@ -44,6 +44,8 @@ namespace MouseSelection
             pManager.AddBrepParameter("brep","brep","brep",GH_ParamAccess.item);
             pManager.AddBooleanParameter("selected","selected","selected",GH_ParamAccess.item);
             pManager.AddPlaneParameter("buildOnPlane","buildOnPlane","buildOnPlane",GH_ParamAccess.item);
+            pManager.AddNumberParameter("shift","shift","shift",GH_ParamAccess.list);
+            pManager.AddNumberParameter("glueShift","glueShift","glueShift",GH_ParamAccess.list);
 
         }
 
@@ -75,6 +77,10 @@ namespace MouseSelection
             DA.SetData(9, tBranch.brep);
             DA.SetData(10, tBranch.selected);
             DA.SetData(11, tBranch.buildOnPlane);
+            DA.SetDataList(12, string.IsNullOrEmpty(tBranch.placementShift) ? null : 
+                tBranch.placementShift.Split(',').Select(o => Convert.ToDouble(o)).ToList());
+            DA.SetDataList(13, string.IsNullOrEmpty(tBranch.placementGlueShift) ? null : 
+                tBranch.placementGlueShift.Split(',').Select(o => Convert.ToDouble(o)).ToList());
         }
 
         /// <summary>

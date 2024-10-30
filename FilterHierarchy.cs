@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
+using BonsaiInstallation;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
-using BonsaiInstallation;
-using System.Linq;
 
 namespace MouseSelection
 {
-    public class DeleteTBranch : GH_Component
+    public class FilterHierarchy : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the DeleteTBranch class.
+        /// Initializes a new instance of the FilterHierarchy class.
         /// </summary>
-        public DeleteTBranch()
-          : base("DeleteTBranch", "delTBranch",
+        public FilterHierarchy()
+          : base("FilterHierarchy", "Nickname",
               "Description",
               "MouseSelection", "MouseSelection")
         {
@@ -25,9 +24,8 @@ namespace MouseSelection
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("tree", "tree", "tree", GH_ParamAccess.list);
-            pManager.AddGenericParameter("branch", "branch", "branch", GH_ParamAccess.item);
-            pManager.AddBooleanParameter("deleteBranch","del", "delete Branch and all children", GH_ParamAccess.item);
+            pManager.AddGenericParameter("branches", "branches", "branches", GH_ParamAccess.list);
+            pManager.AddGenericParameter("selection", "selection", "selection", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -35,7 +33,9 @@ namespace MouseSelection
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("json", "json", "json", GH_ParamAccess.item);
+            pManager.AddGenericParameter("branches", "branches", "branches", GH_ParamAccess.list);
+            pManager.AddBrepParameter("breps", "breps", "breps", GH_ParamAccess.list);
+
         }
 
         /// <summary>
@@ -44,33 +44,34 @@ namespace MouseSelection
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            
             List<TimberBranch> tree = new List<TimberBranch>();
-            TimberBranch branch = null;
-            bool delete = false;
+            List<TimberBranch> selection = new List<TimberBranch>();
 
             DA.GetDataList(0, tree);
-            DA.GetData(1, ref branch);
-            DA.GetData(2, ref delete);
+            DA.GetDataList(1, selection);
 
-            if (!delete) return;
+            List<Guid> filtered = new List<Guid>();
 
-            // all deletable IDs
-            List<Guid> childrenIDs = new List<Guid>();
-            GetChildrenIDs(branch, tree, childrenIDs);
-            //childrenIDs.Add(branch.ID);
-            // make the list unique
-            childrenIDs = childrenIDs.Distinct().ToList();
-
-            List<TimberBranch> duplicteList = new List<TimberBranch>();
-            foreach (TimberBranch item in tree)
+            foreach (var item in selection)
             {
-                if (!childrenIDs.Contains(item.ID))
-                {
-                    duplicteList.Add(item);
-                }
+                GetChildrenIDs(item, tree, filtered);
             }
 
-            DA.SetData(0, TimberBranch.ListToJson(duplicteList));
+            filtered = filtered.Distinct().ToList();
+
+            List<TimberBranch> final = new List<TimberBranch>();
+            foreach (var item in filtered)
+            {
+                TimberBranch branch = tree.Where(x => x.ID == item).First();
+                final.Add(branch);
+            }
+
+            if (final.Count == 0) return;
+
+            DA.SetDataList(0, final);
+            DA.SetDataList(1, final.Select(x => x.brep).ToList());
+
         }
 
         private bool GetChildrenIDs(TimberBranch branch, List<TimberBranch> tree, List<Guid> childrenIDs)
@@ -92,7 +93,6 @@ namespace MouseSelection
             return true;
         }
 
-
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
@@ -111,7 +111,7 @@ namespace MouseSelection
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("DEAE65DD-9E67-447C-9421-13C9D003D5D3"); }
+            get { return new Guid("1877CDAC-2497-4E1B-81B7-B315CCE23EE1"); }
         }
     }
 }
