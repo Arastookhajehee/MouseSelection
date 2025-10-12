@@ -47,17 +47,17 @@ namespace MouseSelection
 
             DA.GetDataList(0, tree);
 
-            var built = tree.Where(x => x.state == "physical").ToList();
+            var built = tree.Where(x => x.status == "physical").ToList();
             
             List<TimberBranch> buildables = new List<TimberBranch>();
             List<TimberBranch> notYet = new List<TimberBranch>();
             foreach (var item in tree)
             {
-                string state = item.state;
+                string state = item.status;
                 if (state == "physical") continue;
                 
                 TimberBranch parent = tree.Where(o => o.branch_id == item.branch_id).FirstOrDefault();
-                if (parent.state == "physical")
+                if (parent.status == "physical")
                 {
                     buildables.Add(item);
                 }
@@ -75,7 +75,7 @@ namespace MouseSelection
 
         bool IsBuilt(TimberBranch branch)
         {
-            return branch.state == "physical";
+            return branch.status == "physical";
         }
 
 

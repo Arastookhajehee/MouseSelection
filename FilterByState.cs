@@ -26,7 +26,7 @@ namespace MouseSelection
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("branches", "branches", "branches", GH_ParamAccess.list);
-            pManager.AddTextParameter("state", "state", "state", GH_ParamAccess.item);
+            pManager.AddTextParameter("status", "status", "status", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace MouseSelection
             DA.GetDataList(0, tree);
             DA.GetData(1, ref state);
 
-            var filtered = tree.Where(x => x.state == state).ToList();
+            var filtered = tree.Where(x => x.status == state).ToList();
             DA.SetDataList(0, filtered);
 
 

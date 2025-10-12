@@ -152,7 +152,7 @@ namespace MouseSelection.Mouse
 
                     Point3d closestPnt = tempPlacementPlane.ClosestPoint(tempPlane.Origin);
 
-                    closestPnt = closestPnt + tempPlane.ZAxis * selectedBranch.thickness;
+                    closestPnt = closestPnt + tempPlane.ZAxis * selectedBranch.stick_thickness;
 
                     tempPlane.Origin = closestPnt;
 

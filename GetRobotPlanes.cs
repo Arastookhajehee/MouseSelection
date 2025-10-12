@@ -65,8 +65,8 @@ namespace MouseSelection
 
             extraPlane.Rotate(Math.PI / 2, branch.placement_plane.XAxis, branch.placement_plane.Origin);
             extraPlane2.Rotate(-Math.PI / 2, branch.placement_plane.XAxis, branch.placement_plane.Origin);
-            extraPlane.Translate(extraPlane.ZAxis * (branch.length / 2.0 - branch.thickness/2.0));
-            extraPlane2.Translate(extraPlane2.ZAxis * (branch.length / 2.0 - branch.thickness/2.0));
+            extraPlane.Translate(extraPlane.ZAxis * (branch.stick_length / 2.0 - branch.stick_thickness/2.0));
+            extraPlane2.Translate(extraPlane2.ZAxis * (branch.stick_length / 2.0 - branch.stick_thickness/2.0));
 
             for (int i = 0; i < 4; i++)
             {

@@ -38,7 +38,7 @@ namespace MouseSelection
             pManager.AddCurveParameter("borders","borders","borders",GH_ParamAccess.list);
             pManager.AddTextParameter("user_name", "user_name", "user_name", GH_ParamAccess.item);
             pManager.AddColourParameter("color", "color", "color", GH_ParamAccess.item);
-            pManager.AddTextParameter("state", "state", "state", GH_ParamAccess.item);
+            pManager.AddTextParameter("status", "status", "status", GH_ParamAccess.item);
             pManager.AddGenericParameter("parents","parents","parents",GH_ParamAccess.list);
             pManager.AddGenericParameter("children","children","children",GH_ParamAccess.list);
             pManager.AddBrepParameter("brep","brep","brep",GH_ParamAccess.item);
@@ -71,7 +71,7 @@ namespace MouseSelection
             DA.SetDataList(3, borders);
             DA.SetData(4, tBranch.user_name);
             DA.SetData(5, tBranch.color);
-            DA.SetData(6, tBranch.state);
+            DA.SetData(6, tBranch.status);
             DA.SetDataList(7, tBranch.parent_ids);
             DA.SetDataList(8, tBranch.child_ids);
             DA.SetData(9, tBranch.brep);

@@ -29,7 +29,7 @@ namespace MouseSelection
         {
             pManager.AddGenericParameter("branches", "branches", "branches", GH_ParamAccess.list);
             pManager.AddGenericParameter("selection", "selection", "selection", GH_ParamAccess.item);
-            pManager.AddTextParameter("state", "state", "state", GH_ParamAccess.item); 
+            pManager.AddTextParameter("status", "status", "status", GH_ParamAccess.item); 
             pManager.AddBooleanParameter("modify", "mod", "modify", GH_ParamAccess.item);
             pManager.AddNumberParameter("appShiftX", "appShiftX", "appShiftX", GH_ParamAccess.item);
             pManager.AddNumberParameter("appShiftY", "appShiftY", "appShiftY", GH_ParamAccess.item);
@@ -113,7 +113,7 @@ namespace MouseSelection
                         duplicate.fabrication_fail = fail;
                     }
 
-                    duplicate.state = state;
+                    duplicate.status = state;
 
 
                     double[] shiftValues = { appShiftX, appShiftY, appShiftZ, pickShift, orientation};

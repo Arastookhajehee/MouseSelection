@@ -81,7 +81,7 @@ namespace MouseSelection.Mouse
                             // get the plane from the orientation planes that has the largest z local value for the point
                             Plane pl = branch.orientable_planes.OrderBy(p => TimberBranch.PlanePointZValue(p, pnt)).Last();
                             nearestPlane = new Plane(pl);
-                            nearestPlane.Origin = pnt + nearestPlane.ZAxis * branch.thickness / 2.0;
+                            nearestPlane.Origin = pnt + nearestPlane.ZAxis * branch.stick_thickness / 2.0;
                             branch.build_on_plane = nearestPlane;
                             nearestBranch = branch;
 
