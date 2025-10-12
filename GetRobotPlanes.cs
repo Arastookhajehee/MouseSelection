@@ -54,17 +54,17 @@ namespace MouseSelection
             DA.GetData(1, ref index);
             DA.GetData(2, ref shift);
 
-            var orientables = branch.orientablePlanes.Select(p => new Plane(p)).ToList();
+            var orientables = branch.orientable_planes.Select(p => new Plane(p)).ToList();
 
             
 
             
 
-            Plane extraPlane = new Plane(branch.placementPlane);
-            Plane extraPlane2 = new Plane(branch.placementPlane);
+            Plane extraPlane = new Plane(branch.placement_plane);
+            Plane extraPlane2 = new Plane(branch.placement_plane);
 
-            extraPlane.Rotate(Math.PI / 2, branch.placementPlane.XAxis, branch.placementPlane.Origin);
-            extraPlane2.Rotate(-Math.PI / 2, branch.placementPlane.XAxis, branch.placementPlane.Origin);
+            extraPlane.Rotate(Math.PI / 2, branch.placement_plane.XAxis, branch.placement_plane.Origin);
+            extraPlane2.Rotate(-Math.PI / 2, branch.placement_plane.XAxis, branch.placement_plane.Origin);
             extraPlane.Translate(extraPlane.ZAxis * (branch.length / 2.0 - branch.thickness/2.0));
             extraPlane2.Translate(extraPlane2.ZAxis * (branch.length / 2.0 - branch.thickness/2.0));
 
@@ -106,7 +106,7 @@ namespace MouseSelection
         }
 
         /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// Gets the unique branch_id for this component. Do not change this branch_id after release.
         /// </summary>
         public override Guid ComponentGuid
         {

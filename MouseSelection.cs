@@ -90,8 +90,8 @@ namespace MouseSelection
                 mouse.EnableInteraction();
             }
 
-            //Guid firstSelID = mouse.selectionList. mouse.branches.Where(b => b.ID == mouse.selectionList[0].ID).Select(b => b.ID).FirstOrDefault();
-            //Guid secondSelID = mouse.branches.Where(b => b.ID == mouse.selectionList[1].ID).Select(b => b.ID).FirstOrDefault();
+            //Guid firstSelID = mouse.selectionList. mouse.branches.Where(b => b.branch_id == mouse.selectionList[0].branch_id).Select(b => b.branch_id).FirstOrDefault();
+            //Guid secondSelID = mouse.branches.Where(b => b.branch_id == mouse.selectionList[1].branch_id).Select(b => b.branch_id).FirstOrDefault();
 
             mouse.branches = branches;
 
@@ -118,7 +118,7 @@ namespace MouseSelection
         /// <summary>
         /// Each component must have a unique Guid to identify it. 
         /// It is vital this Guid doesn't change otherwise old ghx files 
-        /// that use the old ID will partially fail during loading.
+        /// that use the old branch_id will partially fail during loading.
         /// </summary>
         public override Guid ComponentGuid => new Guid("28aeeaa0-b4b4-4e5e-8219-011adc8fa55e");
     }

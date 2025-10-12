@@ -29,7 +29,7 @@ namespace MouseSelection
             pManager.AddPlaneParameter("plane2", "plane2", "plane2", GH_ParamAccess.item);
             pManager.AddGenericParameter("selection1", "selection1", "selection1", GH_ParamAccess.item);
             pManager.AddGenericParameter("selection2", "selection2", "selection2", GH_ParamAccess.item);
-            pManager.AddTextParameter("user", "user", "user", GH_ParamAccess.item);
+            pManager.AddTextParameter("user_name", "user_name", "user_name", GH_ParamAccess.item);
             pManager.AddColourParameter("color", "color", "color", GH_ParamAccess.item);
             pManager.AddBooleanParameter("ADD", "ADD", "ADD", GH_ParamAccess.item);
         }
@@ -114,7 +114,7 @@ namespace MouseSelection
         }
 
         /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// Gets the unique branch_id for this component. Do not change this branch_id after release.
         /// </summary>
         public override Guid ComponentGuid
         {

@@ -100,7 +100,7 @@ namespace MouseSelection.Mouse
             }
             //if (e.CtrlKeyDown) return;
 
-            Plane cPlane = this.selectedBranch.duplicatePlane;
+            Plane cPlane = this.selectedBranch.duplicate_plane;
 
             this.upPnt = GetCPlaneSelectionPoint(e, cPlane);
 
@@ -127,7 +127,7 @@ namespace MouseSelection.Mouse
 
                 tempPlane.Translate(tempPlane.YAxis * dragDistance * direction);
 
-                this.selectedBranch.duplicatePlane = tempPlane;
+                this.selectedBranch.duplicate_plane = tempPlane;
                 this.dragAngle = 0;
             }
 

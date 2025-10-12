@@ -32,18 +32,18 @@ namespace MouseSelection
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("ID", "ID", "ID", GH_ParamAccess.item);
-            pManager.AddPlaneParameter("placementPlane", "placementPlane", "placementPlane", GH_ParamAccess.item);
-            pManager.AddPlaneParameter("orientablePlanes", "orientablePlanes", "orientablePlanes", GH_ParamAccess.list);
+            pManager.AddGenericParameter("branch_id", "branch_id", "branch_id", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("placement_plane", "placement_plane", "placement_plane", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("orientable_planes", "orientable_planes", "orientable_planes", GH_ParamAccess.list);
             pManager.AddCurveParameter("borders","borders","borders",GH_ParamAccess.list);
-            pManager.AddTextParameter("user", "user", "user", GH_ParamAccess.item);
+            pManager.AddTextParameter("user_name", "user_name", "user_name", GH_ParamAccess.item);
             pManager.AddColourParameter("color", "color", "color", GH_ParamAccess.item);
             pManager.AddTextParameter("state", "state", "state", GH_ParamAccess.item);
             pManager.AddGenericParameter("parents","parents","parents",GH_ParamAccess.list);
             pManager.AddGenericParameter("children","children","children",GH_ParamAccess.list);
             pManager.AddBrepParameter("brep","brep","brep",GH_ParamAccess.item);
             pManager.AddBooleanParameter("selected","selected","selected",GH_ParamAccess.item);
-            pManager.AddPlaneParameter("buildOnPlane","buildOnPlane","buildOnPlane",GH_ParamAccess.item);
+            pManager.AddPlaneParameter("build_on_plane","build_on_plane","build_on_plane",GH_ParamAccess.item);
             pManager.AddNumberParameter("shift","shift","shift",GH_ParamAccess.list);
             pManager.AddNumberParameter("glueShift","glueShift","glueShift",GH_ParamAccess.list);
 
@@ -60,27 +60,27 @@ namespace MouseSelection
 
             if (tBranch == null) return;
 
-            DA.SetData(0, tBranch.ID);
-            DA.SetData(1, tBranch.placementPlane);
-            DA.SetDataList(2, tBranch.orientablePlanes);
+            DA.SetData(0, tBranch.branch_id);
+            DA.SetData(1, tBranch.placement_plane);
+            DA.SetDataList(2, tBranch.orientable_planes);
             List<Curve> borders = new List<Curve>();
-            for (int i = 0; i < tBranch.orientablePlanes.Count; i++)
+            for (int i = 0; i < tBranch.orientable_planes.Count; i++)
             {
                 borders.Add(tBranch.GetBorderFace(i));
             }
             DA.SetDataList(3, borders);
-            DA.SetData(4, tBranch.user);
+            DA.SetData(4, tBranch.user_name);
             DA.SetData(5, tBranch.color);
             DA.SetData(6, tBranch.state);
-            DA.SetDataList(7, tBranch.parentIDs);
-            DA.SetDataList(8, tBranch.childIDs);
+            DA.SetDataList(7, tBranch.parent_ids);
+            DA.SetDataList(8, tBranch.child_ids);
             DA.SetData(9, tBranch.brep);
             DA.SetData(10, tBranch.selected);
-            DA.SetData(11, tBranch.buildOnPlane);
-            DA.SetDataList(12, string.IsNullOrEmpty(tBranch.placementShift) ? null : 
-                tBranch.placementShift.Split(',').Select(o => Convert.ToDouble(o)).ToList());
-            DA.SetDataList(13, string.IsNullOrEmpty(tBranch.placementGlueShift) ? null : 
-                tBranch.placementGlueShift.Split(',').Select(o => Convert.ToDouble(o)).ToList());
+            DA.SetData(11, tBranch.build_on_plane);
+            DA.SetDataList(12, string.IsNullOrEmpty(tBranch.placement_shift) ? null : 
+                tBranch.placement_shift.Split(',').Select(o => Convert.ToDouble(o)).ToList());
+            DA.SetDataList(13, string.IsNullOrEmpty(tBranch.placement_glue_shift) ? null : 
+                tBranch.placement_glue_shift.Split(',').Select(o => Convert.ToDouble(o)).ToList());
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace MouseSelection
         }
 
         /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// Gets the unique branch_id for this component. Do not change this branch_id after release.
         /// </summary>
         public override Guid ComponentGuid
         {

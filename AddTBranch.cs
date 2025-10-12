@@ -30,7 +30,7 @@ namespace MouseSelection
 
             pManager.AddGenericParameter("branches", "branches", "branches", GH_ParamAccess.list);
             pManager.AddGenericParameter("selection", "selection", "selection", GH_ParamAccess.item);
-            pManager.AddTextParameter("user", "user", "user", GH_ParamAccess.item);
+            pManager.AddTextParameter("user_name", "user_name", "user_name", GH_ParamAccess.item);
             pManager.AddColourParameter("color", "color", "color", GH_ParamAccess.item);
             pManager.AddBooleanParameter("ADD", "ADD", "ADD", GH_ParamAccess.item);
             pManager.AddBooleanParameter("MouseClicks", "MouseClicks", "MouseClicks", GH_ParamAccess.item);
@@ -81,17 +81,17 @@ namespace MouseSelection
             }
             if (counter == 0)
             {
-                mouse = new ClickDrag(false,false, selection.buildOnPlane, this.OnPingDocument(), this, list, selection, null);
+                mouse = new ClickDrag(false,false, selection.build_on_plane, this.OnPingDocument(), this, list, selection, null);
                 mouse.EnableInteraction();
                 counter++;
             }
             counter = counter > 100 ? 5 : counter + 1;
 
-            if (currentTBranch != selection.ID)
+            if (currentTBranch != selection.branch_id)
             {
-                currentTBranch = selection.ID;
+                currentTBranch = selection.branch_id;
                 mouse.selectedBranch = selection;
-                mouse.mousePlane = selection.buildOnPlane;
+                mouse.mousePlane = selection.build_on_plane;
             }
 
 
@@ -126,7 +126,7 @@ namespace MouseSelection
         }
 
         /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// Gets the unique branch_id for this component. Do not change this branch_id after release.
         /// </summary>
         public override Guid ComponentGuid
         {

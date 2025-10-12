@@ -24,7 +24,7 @@ namespace MouseSelection
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("branches", "branches", "branches", GH_ParamAccess.list);
-            pManager.AddTextParameter("user", "user", "user", GH_ParamAccess.item);
+            pManager.AddTextParameter("user_name", "user_name", "user_name", GH_ParamAccess.item);
             pManager.AddColourParameter("color", "color", "color", GH_ParamAccess.item);
         }
 
@@ -54,13 +54,13 @@ namespace MouseSelection
             List<TimberBranch> selected = new List<TimberBranch>();
             foreach (var item in list)
             {
-                // new TimberBranch with new user name
+                // new TimberBranch with new user_name name
                 // make the color 30% lighter
                 color = System.Drawing.Color.FromArgb(
                     (int)(color.R * 1.3) > 255 ? 255 : (int)(color.R * 1.3),
                     (int)(color.G * 1.3) > 255 ? 255 : (int)(color.G * 1.3),
                     (int)(color.B * 1.3) > 255 ? 255 : (int)(color.B * 1.3));
-                TimberBranch newBranch = new TimberBranch(item.placementPlane, user, color, "selected");
+                TimberBranch newBranch = new TimberBranch(item.placement_plane, user, color, "selected");
                 selected.Add(newBranch);
             }
 
@@ -81,7 +81,7 @@ namespace MouseSelection
         }
 
         /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// Gets the unique branch_id for this component. Do not change this branch_id after release.
         /// </summary>
         public override Guid ComponentGuid
         {

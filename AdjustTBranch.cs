@@ -76,17 +76,17 @@ namespace MouseSelection
             }
             if (counter == 0)
             {
-                mouse = new ClickDrag(false,true, selection.duplicatePlane, this.OnPingDocument(), this, list, selection, null);
+                mouse = new ClickDrag(false,true, selection.duplicate_plane, this.OnPingDocument(), this, list, selection, null);
                 mouse.EnableInteraction();
                 counter++;
             }
             counter = counter > 100 ? 5 : counter + 1;
 
-            if (selection.ID != currentMember)
+            if (selection.branch_id != currentMember)
             {
-                currentMember = selection.ID;
+                currentMember = selection.branch_id;
                 mouse.selectedBranch = selection;
-                mouse.mousePlane = selection.duplicatePlane;
+                mouse.mousePlane = selection.duplicate_plane;
             }
 
             TimberBranch branch = new TimberBranch(selection, mouse.mousePlane);
@@ -100,13 +100,13 @@ namespace MouseSelection
                 return;
             }
 
-            int index = list.FindIndex(x => x.ID == selection.ID);
+            int index = list.FindIndex(x => x.branch_id == selection.branch_id);
             list.RemoveAt(index);
             list.Insert(index, branch);
             DA.SetData(2, TimberBranch.ListToJson(list));
 
             // make a System.timers.timer to update the find the MouseSelection component and set the selection to null
-            // this will allow the user to select a new branch
+            // this will allow the user_name to select a new branch
             // the timer is 100ms, and will only run once
             // the timer will be stopped after the first run
         }
@@ -146,7 +146,7 @@ namespace MouseSelection
         }
 
         /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// Gets the unique branch_id for this component. Do not change this branch_id after release.
         /// </summary>
         public override Guid ComponentGuid
         {

@@ -57,14 +57,14 @@ namespace MouseSelection
             // all deletable IDs
             List<Guid> childrenIDs = new List<Guid>();
             GetChildrenIDs(branch, tree, childrenIDs);
-            //childrenIDs.Add(branch.ID);
+            //childrenIDs.Add(branch.branch_id);
             // make the list unique
             childrenIDs = childrenIDs.Distinct().ToList();
 
             List<TimberBranch> duplicteList = new List<TimberBranch>();
             foreach (TimberBranch item in tree)
             {
-                if (!childrenIDs.Contains(item.ID))
+                if (!childrenIDs.Contains(item.branch_id))
                 {
                     duplicteList.Add(item);
                 }
@@ -76,12 +76,12 @@ namespace MouseSelection
         private bool GetChildrenIDs(TimberBranch branch, List<TimberBranch> tree, List<Guid> childrenIDs)
         {
             if (branch == null) return false;
-            childrenIDs.Add(branch.ID);
-            foreach (Guid childID in branch.childIDs)
+            childrenIDs.Add(branch.branch_id);
+            foreach (Guid childID in branch.child_ids)
             {
                 try
                 {
-                    TimberBranch child = tree.Where(x => x.ID == childID).First();
+                    TimberBranch child = tree.Where(x => x.branch_id == childID).First();
                     if (child != null) childrenIDs.Add(childID);
                     GetChildrenIDs(child, tree, childrenIDs);
                 }
@@ -107,7 +107,7 @@ namespace MouseSelection
         }
 
         /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// Gets the unique branch_id for this component. Do not change this branch_id after release.
         /// </summary>
         public override Guid ComponentGuid
         {

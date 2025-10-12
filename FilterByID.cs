@@ -50,7 +50,7 @@ namespace MouseSelection
 
             Guid guid = Guid.Parse(id);
 
-            var filtered = tree.Where(x => x.ID == guid).ToList();
+            var filtered = tree.Where(x => x.branch_id == guid).ToList();
 
             DA.SetDataList(0, filtered);
         }
@@ -69,7 +69,7 @@ namespace MouseSelection
         }
 
         /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// Gets the unique branch_id for this component. Do not change this branch_id after release.
         /// </summary>
         public override Guid ComponentGuid
         {

@@ -63,7 +63,7 @@ namespace MouseSelection.Mouse
             double minDistance = double.MaxValue;
             foreach (var branch in this.branches)
             {
-                Mesh meshItem = branch.meshBox;
+                Mesh meshItem = branch.mesh_box;
                 Point3d[] points = Intersection.MeshLine(meshItem, line, out int[] faceIndices);
                 if (points != null && points.Length > 0)
                 {
@@ -79,10 +79,10 @@ namespace MouseSelection.Mouse
 
 
                             // get the plane from the orientation planes that has the largest z local value for the point
-                            Plane pl = branch.orientablePlanes.OrderBy(p => TimberBranch.PlanePointZValue(p, pnt)).Last();
+                            Plane pl = branch.orientable_planes.OrderBy(p => TimberBranch.PlanePointZValue(p, pnt)).Last();
                             nearestPlane = new Plane(pl);
                             nearestPlane.Origin = pnt + nearestPlane.ZAxis * branch.thickness / 2.0;
-                            branch.buildOnPlane = nearestPlane;
+                            branch.build_on_plane = nearestPlane;
                             nearestBranch = branch;
 
                         }
@@ -93,9 +93,9 @@ namespace MouseSelection.Mouse
 
             if (nearestBranch == null) return;
             
-            if (this.selectionList.Select(o => o.ID).Contains(nearestBranch.ID))
+            if (this.selectionList.Select(o => o.branch_id).Contains(nearestBranch.branch_id))
             {
-                this.selectionList.Remove(selectionList.Where(o => o.ID == nearestBranch.ID).FirstOrDefault());
+                this.selectionList.Remove(selectionList.Where(o => o.branch_id == nearestBranch.branch_id).FirstOrDefault());
             }
             else
             {

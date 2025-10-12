@@ -91,26 +91,26 @@ namespace MouseSelection
             for (int i = list.Count - 1; i > -1; i--)
             {
                 TimberBranch branch = list[i];
-                if (branch.ID == selection.ID)
+                if (branch.branch_id == selection.branch_id)
                 {
-                    string modified = branch.modificationTimeStamp;
-                    TimberBranch duplicate = new TimberBranch(branch, branch.placementPlane);
-                    duplicate.modificationTimeStamp = modified;
+                    string modified = branch.modification_time_stamp;
+                    TimberBranch duplicate = new TimberBranch(branch, branch.placement_plane);
+                    duplicate.modification_time_stamp = modified;
 
                     if (state.Equals("physical"))
                     {
                         string built = TimberBranch.GetTimeStamp();
-                        duplicate.physicalTimeStamp = built;
+                        duplicate.physical_time_stamp = built;
                     }
                     if (state.Equals("fabricated")) 
                     {
                         string fabricated = TimberBranch.GetTimeStamp();
-                        duplicate.fabricatedTimeStamp = fabricated;
+                        duplicate.fabricated_time_stamp = fabricated;
                     }
-                    if (state.Equals("fabricationFail"))
+                    if (state.Equals("fabrication_fail"))
                     {
                         string fail = TimberBranch.GetTimeStamp();
-                        duplicate.fabricationFail = fail;
+                        duplicate.fabrication_fail = fail;
                     }
 
                     duplicate.state = state;
@@ -119,8 +119,8 @@ namespace MouseSelection
                     double[] shiftValues = { appShiftX, appShiftY, appShiftZ, pickShift, orientation};
                     double[] glueValues = { glueX, glueY, glueZ };
                     // turn the values into a csv stirng
-                    duplicate.placementShift = shiftValues.Length == 0 ? "" : string.Join(",", shiftValues);
-                    duplicate.placementGlueShift = glueValues.Length == 0 ? "" : string.Join(",", glueValues);
+                    duplicate.placement_shift = shiftValues.Length == 0 ? "" : string.Join(",", shiftValues);
+                    duplicate.placement_glue_shift = glueValues.Length == 0 ? "" : string.Join(",", glueValues);
 
 
                     newList.Add(duplicate);
@@ -150,7 +150,7 @@ namespace MouseSelection
         }
 
         /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// Gets the unique branch_id for this component. Do not change this branch_id after release.
         /// </summary>
         public override Guid ComponentGuid
         {

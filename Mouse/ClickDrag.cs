@@ -148,7 +148,7 @@ namespace MouseSelection.Mouse
                 {
                     
                     Plane tempPlacementPlane = new Plane(tempPlane);
-                    tempPlacementPlane.Origin = selectedBranch.placementPlane.Origin;
+                    tempPlacementPlane.Origin = selectedBranch.placement_plane.Origin;
 
                     Point3d closestPnt = tempPlacementPlane.ClosestPoint(tempPlane.Origin);
 
@@ -163,7 +163,7 @@ namespace MouseSelection.Mouse
 
                 this.mousePlane = tempPlane;
 
-                //this.selectedBranch.buildOnPlane = tempPlane;
+                //this.selectedBranch.build_on_plane = tempPlane;
                 //this.dragAngle = 0;
             }
             else

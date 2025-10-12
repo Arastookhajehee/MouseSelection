@@ -44,7 +44,7 @@ namespace MouseSelection
             TimberBranch t = null;
             if (!DA.GetData(0, ref t)) return;
 
-            Plane p = t.placementPlane;
+            Plane p = t.placement_plane;
             DA.SetData(0, p);
         }
 
@@ -62,7 +62,7 @@ namespace MouseSelection
         }
 
         /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// Gets the unique branch_id for this component. Do not change this branch_id after release.
         /// </summary>
         public override Guid ComponentGuid
         {
