@@ -18,9 +18,5 @@
   <ItemGroup>
     <ProjectReference Include="..\BonsaiInstallation\BonsaiInstallation.csproj" />
   </ItemGroup>
-  
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y $(TargetDir) &quot;C:\Users\akhaj\AppData\Roaming\Grasshopper\Libraries\MouseSelector&quot;" />
-  </Target>
 
 </Project>
