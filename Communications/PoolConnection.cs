@@ -98,7 +98,12 @@ namespace MouseSelection.Communications
             string message = e.Data;
             this.FromJson(message);
 
-            if (canvasDoc == null) return;
+            if (canvasDoc == null) 
+            {
+                var canvas = Grasshopper.Instances.ActiveCanvas;
+                if (canvas != null && canvas.Document != null) this.canvasDoc = canvas.Document;
+                if (canvasDoc == null) return;
+            }
             canvasDoc.ScheduleSolution(1, doc =>
             {
                 var pools = canvasDoc.Objects.Where(o => o is PoolTree);

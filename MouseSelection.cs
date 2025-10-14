@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using BonsaiInstallation;
 using MouseSelection.Mouse;
+using MouseSelection.Communications;
 
 namespace MouseSelection
 {
@@ -40,7 +41,7 @@ namespace MouseSelection
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddBooleanParameter("Run", "Run", "Run", GH_ParamAccess.item);
-            pManager.AddGenericParameter("branches", "branches", "branches", GH_ParamAccess.list);
+            pManager.AddGenericParameter("ws", "ws", "ws", GH_ParamAccess.item);
             pManager.AddBooleanParameter("reset", "reset", "reset", GH_ParamAccess.item);
             pManager.AddBooleanParameter("modifyMode","modifyMode","modifyMode",GH_ParamAccess.item);
         }
@@ -62,12 +63,12 @@ namespace MouseSelection
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             bool run = false;
-            List<TimberBranch> branches = new List<TimberBranch>();
+            PoolConnection pool = null;
             bool reset = false;
             bool modifyMode = false;
 
             DA.GetData(0, ref run);
-            DA.GetDataList(1, branches);
+            DA.GetData(1, ref pool);
             DA.GetData(2, ref reset);
             DA.GetData(3, ref modifyMode);
 
@@ -86,14 +87,14 @@ namespace MouseSelection
             }
             if (counter == 0) 
             {
-                mouse = new DoubleClick(this.OnPingDocument(),this, branches);
+                mouse = new DoubleClick(this.OnPingDocument(),this, pool.tree);
                 mouse.EnableInteraction();
             }
 
             //Guid firstSelID = mouse.selectionList. mouse.branches.Where(b => b.branch_id == mouse.selectionList[0].branch_id).Select(b => b.branch_id).FirstOrDefault();
             //Guid secondSelID = mouse.branches.Where(b => b.branch_id == mouse.selectionList[1].branch_id).Select(b => b.branch_id).FirstOrDefault();
 
-            mouse.branches = branches;
+            mouse.branches = pool.tree;
 
             if (modifyMode) if (mouse.selectionList.Count > 1) mouse.selectionList.RemoveAt(0);
 

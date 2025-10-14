@@ -1,5 +1,6 @@
 ﻿using BonsaiInstallation;
 using Grasshopper.Kernel;
+using MouseSelection.Communications;
 using MouseSelection.Mouse;
 using Rhino.Geometry;
 using System;
@@ -28,7 +29,7 @@ namespace MouseSelection
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
 
-            pManager.AddGenericParameter("branches", "branches", "branches", GH_ParamAccess.list);
+            pManager.AddGenericParameter("ws", "ws", "ws", GH_ParamAccess.item);
             pManager.AddGenericParameter("selection", "selection", "selection", GH_ParamAccess.item);
             pManager.AddTextParameter("user_name", "user_name", "user_name", GH_ParamAccess.item);
             pManager.AddColourParameter("color", "color", "color", GH_ParamAccess.item);
@@ -53,14 +54,14 @@ namespace MouseSelection
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<TimberBranch> list = new List<TimberBranch>();
+            PoolConnection pool = null;
             TimberBranch selection = null;
             string user = "";
             System.Drawing.Color color = System.Drawing.Color.White;
             bool ADD = false;
             bool mouseClicks = false;
 
-            DA.GetDataList(0, list);
+            DA.GetData(0, ref pool);
             DA.GetData(1, ref selection);
             DA.GetData(2, ref user);
             DA.GetData(3, ref color);
@@ -72,6 +73,8 @@ namespace MouseSelection
                 currentTBranch = Guid.Empty;
                 return;
             }
+
+            List<TimberBranch> list = pool.tree;
 
             if (!mouseClicks)
             {

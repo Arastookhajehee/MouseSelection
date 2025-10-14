@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using BonsaiInstallation;
+using MouseSelection.Communications;
 
 namespace MouseSelection
 {
@@ -24,7 +25,7 @@ namespace MouseSelection
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("branches", "branches", "branches", GH_ParamAccess.list);
+            pManager.AddGenericParameter("branches", "branches", "branches", GH_ParamAccess.item);
             pManager.AddPlaneParameter("plane1", "plane1", "plane1", GH_ParamAccess.item);
             pManager.AddPlaneParameter("plane2", "plane2", "plane2", GH_ParamAccess.item);
             pManager.AddGenericParameter("selection1", "selection1", "selection1", GH_ParamAccess.item);
@@ -50,7 +51,7 @@ namespace MouseSelection
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<TimberBranch> branches = new List<TimberBranch>();
+            PoolConnection pool = null;
             Plane plane1 = new Plane();
             Plane plane2 = new Plane();
             TimberBranch selection1 = null;
@@ -60,7 +61,7 @@ namespace MouseSelection
             
             bool ADD = false;
 
-            if (!DA.GetDataList(0, branches)) return;
+            if (!DA.GetData(0, ref pool)) return;
             if (!DA.GetData(1, ref plane1)) return;
             if (!DA.GetData(2, ref plane2)) return;
             if (!DA.GetData(3, ref selection1)) return;
@@ -70,6 +71,7 @@ namespace MouseSelection
             if (!DA.GetData(7, ref ADD)) return;
 
 
+            List<TimberBranch> branches = pool.tree;
 
 
             var branch1 = new TimberBranch(plane1, "default", System.Drawing.Color.MediumAquamarine, "virtual");
