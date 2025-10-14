@@ -73,7 +73,7 @@ namespace MouseSelection
 
 
             var branch1 = new TimberBranch(plane1, "default", System.Drawing.Color.MediumAquamarine, "virtual");
-            var branch2 = new TimberBranch(plane1, "default", System.Drawing.Color.MediumAquamarine, "virtual");
+            var branch2 = new TimberBranch(plane2, "default", System.Drawing.Color.MediumAquamarine, "virtual");
 
             //branches.Add(branch1);
             //branches.Add(branch2);
@@ -97,7 +97,7 @@ namespace MouseSelection
             branches.Add(branch2);
 
             DA.SetData(1, TimberBranch.ListToJson(branches));
-
+            DA.SetDataList(2, branches);
         }
 
         /// <summary>

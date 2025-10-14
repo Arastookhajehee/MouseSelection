@@ -107,9 +107,10 @@ namespace MouseSelection
             }
 
             var newOne = selection.BuildOn(mouse.mousePlane, user, color,false);
-            list.Add(newOne);
+            //list.Add(newOne);
 
             DA.SetData(2, TimberBranch.ListToJson(list));
+            DA.SetData(3, newOne);
         }
 
         /// <summary>
