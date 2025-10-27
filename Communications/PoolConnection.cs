@@ -15,7 +15,9 @@ namespace MouseSelection.Communications
         bool isConnected = false;
         public WebSocket ws;
         public List<TimberBranch> tree;
+        public Dictionary<string, WSActionDesignPreview> designPreviews;
         GH_Document canvasDoc;
+        bool wss = false;
 
         /// <summary>
         /// Initializes a new instance of the PoolConnection class.
@@ -27,6 +29,7 @@ namespace MouseSelection.Communications
         {
             tree = new List<TimberBranch>();
             var canvas = Grasshopper.Instances.ActiveCanvas;
+            designPreviews = new Dictionary<string, WSActionDesignPreview>();
             if (canvas != null && canvas.Document != null) this.canvasDoc = canvas.Document;
             try
             {
@@ -45,6 +48,7 @@ namespace MouseSelection.Communications
         {
             pManager.AddTextParameter("url", "url", "url", GH_ParamAccess.item, "ws://localhost:8080");
             pManager.AddBooleanParameter("connect", "connect", "connect", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("WSS", "Is WSS server", "", GH_ParamAccess.item, false);
         }
 
         /// <summary>
@@ -63,18 +67,35 @@ namespace MouseSelection.Communications
         {
             string url = "ws://localhost:8080";
             bool connect = false;
+            wss = false;
             DA.GetData(0, ref url);
             DA.GetData(1, ref connect);
+            DA.GetData(2, ref wss);
+
+            if (!connect)
+            {
+                isConnected = false;
+                ws.OnClose -= Ws_OnClose;
+            }
 
             if (connect && !isConnected)
             {
                 ws = new WebSocket(url);
+
+                if (wss)
+                {
+                    // TLS fix:
+                    ws.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+                    // Still allow debugging bad certs:
+                    ws.SslConfiguration.ServerCertificateValidationCallback = (sender, cert, chain, errors) => true;
+                }
 
                 ws.OnOpen += Ws_OnOpen;
                 ws.OnMessage += Ws_OnMessage;
                 ws.OnClose += Ws_OnClose;
 
                 ws.Connect();
+                designPreviews = new Dictionary<string, WSActionDesignPreview>();
             }
             else if (!connect)
             {
@@ -90,7 +111,23 @@ namespace MouseSelection.Communications
 
         private void Ws_OnClose(object sender, CloseEventArgs e)
         {
-            this.isConnected = false;
+            ws.OnOpen -= Ws_OnOpen;
+            ws.OnMessage -= Ws_OnMessage;
+            ws.OnClose -= Ws_OnClose;
+
+            ws = new WebSocket(url);
+            if (wss)
+            {
+                // TLS fix:
+                ws.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+                // Still allow debugging bad certs:
+                ws.SslConfiguration.ServerCertificateValidationCallback = (s, cert, chain, errors) => true;
+            }
+            ws.OnOpen += Ws_OnOpen;
+            ws.OnMessage += Ws_OnMessage;
+            ws.OnClose += Ws_OnClose;
+
+            ws.Connect();
         }
 
         private void Ws_OnMessage(object sender, MessageEventArgs e)
@@ -98,7 +135,7 @@ namespace MouseSelection.Communications
             string message = e.Data;
             this.FromJson(message);
 
-            if (canvasDoc == null) 
+            if (canvasDoc == null)
             {
                 var canvas = Grasshopper.Instances.ActiveCanvas;
                 if (canvas != null && canvas.Document != null) this.canvasDoc = canvas.Document;
@@ -161,6 +198,10 @@ namespace MouseSelection.Communications
                 case action.CreateSingle:
                     WSActionCreateSingle createSingle = JsonConvert.DeserializeObject<WSActionCreateSingle>(json);
                     return createSingle.Execute(this.tree);
+
+                case action.Preview:
+                    WSActionDesignPreview designPreview = JsonConvert.DeserializeObject<WSActionDesignPreview>(json);
+                    return designPreview.Execute(this);
 
                 default:
                     return false;

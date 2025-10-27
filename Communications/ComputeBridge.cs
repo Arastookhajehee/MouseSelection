@@ -79,14 +79,14 @@ namespace MouseSelection.Communications
             {
                 if (pair != null)
                 {
-                    if (pair.Item1 != null)
-                    {
-                        breps.Add(pair.Item1, new GH_Path(breps.BranchCount));
-                    }
-                    if (pair.Item2 != null)
-                    {
-                        breps.Add(pair.Item2, new GH_Path(breps.BranchCount - 1));
-                    }
+                    breps.Add(pair.Item1, new GH_Path(breps.BranchCount));
+                    breps.Add(pair.Item2, new GH_Path(breps.BranchCount - 1));
+                    //if (pair.Item1 != null)
+                    //{
+                    //}
+                    //if (pair.Item2 != null)
+                    //{
+                    //}
                 }
             }
             DA.SetDataTree(0,breps);

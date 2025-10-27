@@ -20,7 +20,8 @@ namespace MouseSelection.Communications
         GetSingle = 10,
         ResponseSingle = 11,
         Confirmation = 12,
-        Error = 13
+        Error = 13,
+        Preview = 14
     }
 
 

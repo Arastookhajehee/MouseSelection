@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MouseSelection", "MouseSele
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BonsaiInstallation", "..\BonsaiInstallation\BonsaiInstallation.csproj", "{265292F8-B834-478D-8CD5-58B5FC15F007}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CuroboPathPlanner", "..\CuroboPathPlanner\CuroboPathPlanner.csproj", "{2006CCC9-54A1-BF37-5F0A-0B411D0FF682}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollaborativeGeometry", "..\CollaborativeGeometry\CollaborativeGeometry.csproj", "{293439A1-4CD5-672C-77C1-0C5D6F0B9C81}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{265292F8-B834-478D-8CD5-58B5FC15F007}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{265292F8-B834-478D-8CD5-58B5FC15F007}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{265292F8-B834-478D-8CD5-58B5FC15F007}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2006CCC9-54A1-BF37-5F0A-0B411D0FF682}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2006CCC9-54A1-BF37-5F0A-0B411D0FF682}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2006CCC9-54A1-BF37-5F0A-0B411D0FF682}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2006CCC9-54A1-BF37-5F0A-0B411D0FF682}.Release|Any CPU.Build.0 = Release|Any CPU
+		{293439A1-4CD5-672C-77C1-0C5D6F0B9C81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{293439A1-4CD5-672C-77C1-0C5D6F0B9C81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{293439A1-4CD5-672C-77C1-0C5D6F0B9C81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{293439A1-4CD5-672C-77C1-0C5D6F0B9C81}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

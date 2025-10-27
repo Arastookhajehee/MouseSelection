@@ -74,8 +74,8 @@ namespace MouseSelection
             List<TimberBranch> branches = pool.tree;
 
 
-            var branch1 = new TimberBranch(plane1, "default", System.Drawing.Color.MediumAquamarine, "virtual");
-            var branch2 = new TimberBranch(plane2, "default", System.Drawing.Color.MediumAquamarine, "virtual");
+            var branch1 = new TimberBranch(plane1, "default", color, "virtual");
+            var branch2 = new TimberBranch(plane2, "default", color, "virtual");
 
             //branches.Add(branch1);
             //branches.Add(branch2);
